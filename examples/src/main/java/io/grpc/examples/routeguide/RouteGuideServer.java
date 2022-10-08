@@ -157,6 +157,12 @@ public class RouteGuideServer {
         int lat = feature.getLocation().getLatitude();
         int lon = feature.getLocation().getLongitude();
         if (lon >= left && lon <= right && lat >= bottom && lat <= top) {
+          try { // 每个 feature 发送前先休眠5秒，则服务端 responseObserver.onNext(feature); 一次，客户端收到一个 feature，再过5秒，继续循环
+              TimeUnit.SECONDS.sleep(5);
+          } catch (InterruptedException e) {
+              e.printStackTrace();
+          }
+          logger.info("Sending feature:" + feature);
           responseObserver.onNext(feature);
         }
       }
